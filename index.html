@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVIV/pls</title>
+    <style>
+      body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-size: 15px; color: #FFF; font-family: Arial, sans-serif; background: url('https://lh3.googleusercontent.com/d/1vk2yOWN2yRP6shQTnzZnhSSvVvrBlngE=s2000') no-repeat center center; background-size: cover; }
+        .pantalla { display: none; height: 100%; width: 100%; position: absolute; top: 0; left: 0; }
+        .pantalla.activa { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .boton { padding: 15px 30px; margin: 20px; border-radius: 25px; border: none; background-color: #FF0000; color: #000; font-size: 1em; cursor: pointer; }
+        .titulo-inicio { position: absolute; top: 20px; width: 100%; text-align: center; font-size: 0.6em; color: #FF0000; z-index: 2; margin-top: 10em; }
+        .titulo { font-size: 2em; font-weight: bold; color: #FF0000; text-align: center; margin-top: 20px; z-index: 2; position: relative; cursor: pointer; animation: pulsoRojo 0.8s infinite; }
+        @keyframes pulsoRojo { 0% { text-shadow: 0 0 5px #FF0000; } 50% { text-shadow: 0 0 20px #FF0000; } 100% { text-shadow: 0 0 5px #FF0000; } }
+        .mensaje { color: #FF0000; text-align: center; font-size: 0.8em; }
+        .regresar, .siguiente { position: absolute; bottom: 20px; border-radius: 25px; background-color: #FF0000; color: #000; padding: 10px 20px; border: none; cursor: pointer; z-index: 2; }
+        .regresar { left: 20px; }
+        .siguiente { right: 20px; }
+        .firma { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 7px; color: #FF0000; z-index: 2; text-align: center; }
+        .pantalla-negra { background-color: #000; color: #FF0000; justify-content: center; align-items: center; }
+        #youtubePlayer { width: 0; height: 0; border: none; }
+        #videoFondo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="pantalla1" class="pantalla activa">
+      <div class="titulo-inicio">/playlists:</div>
+      <button class="boton" onclick="mostrarPantalla(2)">Modo Sexo</button>
+      <button class="boton" onclick="mostrarPantalla(3)">Modo Romántico</button>
+      <button class="boton" onclick="mostrarPantalla(4)">Modo Fiesta</button>
+      <div class="firma">by NVIV</div>
+    </div>
+    <div id="pantalla2" class="pantalla">
+      <div class="titulo" onclick="abrirLink()">"Mañana me arrepiento, hoy no pienso"</div>
+      <video id="videoFondo" autoplay muted playsinline></video>
+      <div id="youtubePlayer"></div>
+      <button class="regresar" onclick="regresar()">Regresar</button>
+      <button class="siguiente" onclick="siguienteVideo()">Siguiente</button>
+      <div class="firma">by NVIV</div>
+    </div>
+    <div id="pantalla3" class="pantalla pantalla-negra">
+      <p class="mensaje">El desarrollador aun no está inspirado <br> para hacer este modo. <br> :'(</p>
+      <button class="regresar" onclick="regresar()">Regresar</button>
+    </div>
+    <div id="pantalla4" class="pantalla pantalla-negra">
+      <p class="mensaje">El desarrollador aun no está inspirado <br> para hacer este modo. <br> :'(</p>
+      <button class="regresar" onclick="regresar()">Regresar</button>
+    </div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+      let player;
+      const playlistId = "PLTsg_kaNc_ZYWJjttiS6Cyaf14Badw1vc";
+      const videos = [
+        "https://www.pexels.com/es-es/download/video/6893214/",
+        "https://www.pexels.com/es-es/download/video/7569433/",
+        "https://www.pexels.com/es-es/download/video/9757160/",
+        "https://www.pexels.com/es-es/download/video/8113100/",
+        "https://www.pexels.com/es-es/download/video/6835383/",
+        "https://www.pexels.com/es-es/download/video/15713812/",
+        "https://www.pexels.com/es-es/download/video/30428231/"
+      ];
+      let indiceVideo = 0;
+      const videoElemento = document.getElementById("videoFondo");
+      function reproducirVideo(index) {
+        videoElemento.src = videos[index];
+        videoElemento.play();
+      }
+      videoElemento.addEventListener("ended", () => {
+        indiceVideo = (indiceVideo + 1) % videos.length;
+        reproducirVideo(indiceVideo);
+      });
+      function abrirLink() {
+        window.location.href = "https://x.com/uele06";
+      }
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtubePlayer', {
+          height: '0',
+          width: '0',
+          playerVars: {
+            listType: 'playlist',
+            list: playlistId,
+            autoplay: 0,
+            loop: 1,
+            shuffle: 1
+          },
+          events: {
+            'onReady': (event) => {
+              event.target.setShuffle(true);
+            }
+          }
+        });
+      }
+      function mostrarPantalla(num) {
+        document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+        document.getElementById('pantalla' + num).classList.add('activa');
+        if (num === 1 && player) {
+          player.stopVideo();
+        }
+        if (num === 2 && player) {
+          player.playVideo();
+          reproducirVideo(indiceVideo);
+        }
+        if (num !== 1) {
+          activarPantallaCompleta();
+        }
+      }
+      function regresar() {
+        mostrarPantalla(1);
+      }
+      function siguienteVideo() {
+        if (player) player.nextVideo();
+      }
+      function activarPantallaCompleta() {
+        let elem = document.documentElement;
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+          elem.msRequestFullscreen();
+        }
+      }
+    </script>
+  </body>
+</html>
